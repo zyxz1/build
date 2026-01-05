@@ -13,6 +13,7 @@
             <p class="text-xl text-white/90">Enter your webhook. Get a website instantly.</p>
         </div>
 
+        <!-- Input Section -->
         <div id="inputSection" class="bg-white rounded-3xl shadow-2xl p-10 max-w-2xl mx-auto">
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Create Your Website</h2>
@@ -33,29 +34,93 @@
                     ⚡ Generate Website Instantly
                 </button>
             </div>
+
+            <div class="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-gray-200">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">⚡</div>
+                    <div class="text-xs text-gray-600 font-semibold">Instant Deploy</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🔄</div>
+                    <div class="text-xs text-gray-600 font-semibold">Auto Updates</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🆓</div>
+                    <div class="text-xs text-gray-600 font-semibold">100% Free</div>
+                </div>
+            </div>
         </div>
 
+        <!-- Result Section -->
         <div id="resultSection" class="hidden space-y-6">
             <div class="bg-white rounded-3xl shadow-2xl p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
                 <h2 class="text-4xl font-bold text-gray-800 mb-3">🎉 Your Website is LIVE!</h2>
+                <p class="text-gray-600 text-lg mb-6">Your unique website is ready to use</p>
+
+                <!-- Website URL -->
                 <div class="bg-green-50 border-2 border-green-300 rounded-xl p-4 mb-4">
                     <label class="block text-sm font-semibold text-green-900 mb-2">Your Website URL</label>
                     <div class="flex items-center gap-2 bg-white px-4 py-3 rounded-lg">
                         <code id="siteUrl" class="flex-1 text-green-700 font-mono font-semibold text-lg"></code>
-                        <button onclick="copyUrl()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <button onclick="copyUrl()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Copy
                         </button>
+                        <button onclick="openSite()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            Open
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Webhook Info -->
+                <div class="bg-purple-50 border-2 border-purple-300 rounded-xl p-4">
+                    <label class="block text-sm font-semibold text-purple-900 mb-2">Update Your Site</label>
+                    <p class="text-sm text-purple-800 mb-2">Add <code class="bg-purple-200 px-2 py-1 rounded">?title=Your Title&content=Your Content&color=667eea</code> to your URL</p>
+                </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800">Live Preview</h3>
+                    <button onclick="updatePreview()" class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
+                        ⚡ Test Update
+                    </button>
+                </div>
+                <div id="preview"></div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">📡 How to Update Your Website</h3>
+                <p class="text-gray-600 mb-4">Add parameters to your URL to change content:</p>
+                
+                <div class="bg-gray-900 text-green-400 p-5 rounded-xl text-sm font-mono overflow-x-auto mb-4">
+<span id="exampleUrl"></span>?title=New Title&content=Updated content&color=ff6b6b
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-900 mb-2">📝 title</h4>
+                        <p class="text-sm text-blue-800">Change the main heading</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-900 mb-2">💬 content</h4>
+                        <p class="text-sm text-green-800">Update the description</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-purple-900 mb-2">🎨 color</h4>
+                        <p class="text-sm text-purple-800">Change theme color (hex)</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-2xl p-8">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4">Live Preview</h3>
-                <div id="preview" class="rounded-2xl overflow-hidden border-4 border-gray-200"></div>
-            </div>
-
             <div class="text-center">
-                <button onclick="resetForm()" class="bg-white text-purple-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50">
+                <button onclick="resetForm()" class="bg-white text-purple-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 shadow-lg transition-colors">
                     Create Another Website
                 </button>
             </div>
@@ -63,81 +128,183 @@
     </div>
 
     <script>
+        let currentSiteData = null;
+
         function generateSite() {
             const webhook = document.getElementById('webhookInput').value;
-            if (!webhook) {
-                alert('Please enter a webhook URL');
-                return;
-            }
-
-            const siteId = 'site-' + Date.now().toString(36);
-            const siteUrl = window.location.origin + '/' + siteId;
-
-            // Store in localStorage
-            const sites = JSON.parse(localStorage.getItem('sites') || '{}');
-            sites[siteId] = {
+            
+            // Generate unique site data
+            const siteId = 'site-' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+            
+            // Create site data object
+            currentSiteData = {
+                id: siteId,
                 webhook: webhook,
                 title: 'Welcome to Your Site!',
-                content: 'Your website is live and ready!',
-                color: '#667eea'
+                content: 'Your website is live and ready to receive updates!',
+                color: '667eea'
             };
-            localStorage.setItem('sites', JSON.stringify(sites));
 
-            // Show result
+            // Store in localStorage with expiration (simulate database)
+            const sites = JSON.parse(localStorage.getItem('webhook_sites') || '{}');
+            sites[siteId] = currentSiteData;
+            localStorage.setItem('webhook_sites', JSON.stringify(sites));
+
+            // Generate the site URL with query params
+            const baseUrl = window.location.href.split('?')[0];
+            const siteUrl = `${baseUrl}?site=${siteId}&title=${encodeURIComponent(currentSiteData.title)}&content=${encodeURIComponent(currentSiteData.content)}&color=${currentSiteData.color}`;
+
+            // Update UI
             document.getElementById('siteUrl').textContent = siteUrl;
+            document.getElementById('exampleUrl').textContent = siteUrl;
             document.getElementById('inputSection').classList.add('hidden');
             document.getElementById('resultSection').classList.remove('hidden');
 
             // Show preview
-            showPreview(sites[siteId]);
+            showPreview(currentSiteData);
         }
 
         function showPreview(data) {
-            document.getElementById('preview').innerHTML = `
-                <div style="background: linear-gradient(135deg, ${data.color} 0%, ${data.color}dd 100%); padding: 3rem;">
-                    <div class="bg-white p-16 rounded-2xl shadow-2xl text-center">
-                        <h1 style="color: ${data.color}; font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem;">
+            const preview = document.getElementById('preview');
+            preview.innerHTML = `
+                <div style="background: linear-gradient(135deg, #${data.color} 0%, #${data.color}dd 100%); border-radius: 1rem; overflow: hidden; border: 4px solid #e5e7eb;">
+                    <div style="background: white; margin: 3rem; padding: 4rem; border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center;">
+                        <h1 style="color: #${data.color}; font-size: 3rem; font-weight: 700; margin-bottom: 1.5rem; font-family: system-ui;">
                             ${data.title}
                         </h1>
-                        <p style="color: #555; font-size: 1.25rem; line-height: 1.8;">
+                        <p style="color: #6b7280; font-size: 1.25rem; line-height: 1.75; margin-bottom: 2rem; font-family: system-ui;">
                             ${data.content}
                         </p>
+                        <div style="display: inline-block; background: #${data.color}; color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 600; font-family: system-ui;">
+                            🚀 Powered by Webhooks
+                        </div>
                     </div>
                 </div>
             `;
         }
 
+        function updatePreview() {
+            const colors = ['ff6b6b', '4ecdc4', '95e1d3', 'f38181', 'a8e6cf', 'ffd93d'];
+            const titles = ['🎉 Flash Sale!', '📢 Big Update!', '⚡ New Feature!', '🚀 We\'re Live!'];
+            const contents = ['Check out our latest offers!', 'Something amazing is here!', 'You won\'t believe this!', 'This is incredible!'];
+            
+            currentSiteData.color = colors[Math.floor(Math.random() * colors.length)];
+            currentSiteData.title = titles[Math.floor(Math.random() * titles.length)];
+            currentSiteData.content = contents[Math.floor(Math.random() * contents.length)];
+            
+            showPreview(currentSiteData);
+        }
+
         function copyUrl() {
             const url = document.getElementById('siteUrl').textContent;
-            navigator.clipboard.writeText(url);
-            alert('URL copied!');
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ URL copied to clipboard!');
+            });
+        }
+
+        function openSite() {
+            const url = document.getElementById('siteUrl').textContent;
+            window.open(url, '_blank');
         }
 
         function resetForm() {
             document.getElementById('webhookInput').value = '';
             document.getElementById('inputSection').classList.remove('hidden');
             document.getElementById('resultSection').classList.add('hidden');
+            currentSiteData = null;
         }
 
         // Check if we're viewing a generated site
         window.onload = function() {
-            const path = window.location.pathname.substring(1);
-            if (path.startsWith('site-')) {
-                const sites = JSON.parse(localStorage.getItem('sites') || '{}');
-                if (sites[path]) {
-                    document.body.innerHTML = `
-                        <div style="background: linear-gradient(135deg, ${sites[path].color} 0%, ${sites[path].color}dd 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                            <div style="background: white; padding: 80px; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); max-width: 700px; text-align: center;">
-                                <h1 style="color: ${sites[path].color}; font-size: 3.5rem; font-weight: bold; margin-bottom: 2rem; font-family: system-ui;">
-                                    ${sites[path].title}
-                                </h1>
-                                <p style="color: #555; font-size: 1.3rem; line-height: 1.8; font-family: system-ui;">
-                                    ${sites[path].content}
-                                </p>
+            const params = new URLSearchParams(window.location.search);
+            const siteId = params.get('site');
+            const title = params.get('title');
+            const content = params.get('content');
+            const color = params.get('color');
+
+            // If URL has site parameters, show the generated website
+            if (siteId && title) {
+                document.body.innerHTML = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>${title}</title>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body {
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                                background: linear-gradient(135deg, #${color || '667eea'} 0%, #${color || '667eea'}dd 100%);
+                                min-height: 100vh;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 20px;
+                            }
+                            .box {
+                                background: white;
+                                padding: 80px 100px;
+                                border-radius: 24px;
+                                box-shadow: 0 30px 90px rgba(0,0,0,0.3);
+                                max-width: 800px;
+                                text-align: center;
+                                animation: fadeIn 0.6s ease-out;
+                            }
+                            @keyframes fadeIn {
+                                from { opacity: 0; transform: translateY(30px); }
+                                to { opacity: 1; transform: translateY(0); }
+                            }
+                            h1 {
+                                color: #${color || '667eea'};
+                                font-size: 4rem;
+                                font-weight: 800;
+                                margin-bottom: 2rem;
+                                line-height: 1.2;
+                            }
+                            p {
+                                color: #555;
+                                font-size: 1.5rem;
+                                line-height: 1.8;
+                                margin-bottom: 3rem;
+                            }
+                            .badge {
+                                display: inline-block;
+                                background: #${color || '667eea'};
+                                color: white;
+                                padding: 1rem 2rem;
+                                border-radius: 50px;
+                                font-size: 1rem;
+                                font-weight: 700;
+                                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                            }
+                            .footer {
+                                margin-top: 3rem;
+                                padding-top: 2rem;
+                                border-top: 2px solid #f0f0f0;
+                                color: #999;
+                                font-size: 0.9rem;
+                            }
+                            @media (max-width: 768px) {
+                                .box { padding: 40px 30px; }
+                                h1 { font-size: 2.5rem; }
+                                p { font-size: 1.1rem; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="box">
+                            <h1>${decodeURIComponent(title)}</h1>
+                            <p>${decodeURIComponent(content || 'Your website is live and ready!')}</p>
+                            <div class="badge">🚀 Powered by Webhooks</div>
+                            <div class="footer">
+                                Site ID: ${siteId}<br>
+                                <small>Update this page by changing the URL parameters</small>
                             </div>
                         </div>
-                    `;
-                }
+                    </body>
+                    </html>
+                `;
             }
         };
     </script>
